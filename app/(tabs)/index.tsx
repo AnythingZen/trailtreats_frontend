@@ -10,10 +10,10 @@ export default function HomeScreen() {
         {/* Search Bar and Profile Icon */}
         <View style={styles.header}>
           <View style={styles.searchContainer}>
-            <FontAwesome name="search" size={20} color="#888" style={styles.searchIcon} />
+            <FontAwesome name="search" style={styles.searchIcon} />
             <TextInput placeholder="Search Food" style={styles.searchInput} />
           </View>
-          <FontAwesome name="user-circle" size={30} color="#888" />
+          <FontAwesome name="user-circle" style={styles.profileIcon} />
         </View> 
 
         {/* Placeholder Boxes */}
@@ -54,7 +54,7 @@ export default function HomeScreen() {
               Campaign Period: 24 Feb 2025 - 24 Mar 2025
             </Text>
             <TouchableOpacity style={styles.buyButton}>
-              <FontAwesome name="shopping-cart" size={20} color="#fff" />
+              <FontAwesome name="shopping-cart" style={styles.buyButtonIcon} />
               <Text style={styles.buyButtonText}>BUY NOW</Text>
             </TouchableOpacity>
           </View>
@@ -87,6 +87,8 @@ const styles = StyleSheet.create({
   },
   searchIcon: {
     marginRight: 10,
+    fontSize: 20,
+    color: '#888',
   },
   searchInput: {
     flex: 1,
@@ -165,9 +167,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-end',
   },
+  buyButtonIcon: {
+    fontSize: 20,
+    color: '#fff',
+  },
   buyButtonText: {
     color: '#fff',
     fontFamily: 'Poppins-Bold',
     marginLeft: 10,
+  },
+  profileIcon: {
+    fontSize: 30,
+    color: '#888',
   },
 });
