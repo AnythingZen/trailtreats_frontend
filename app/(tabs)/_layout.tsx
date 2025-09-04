@@ -1,7 +1,7 @@
-import { Tabs } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons'; 
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { FontAwesome } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme() ?? 'light';
