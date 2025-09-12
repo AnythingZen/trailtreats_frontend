@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 export default function CartScreen() {
 	return (
 		<View style={styles.container}>
-			<Text style={styles.title}>Cart</Text>
+			<Text style={styles.title}>Coming soon</Text>
 		</View>
 	);
 }

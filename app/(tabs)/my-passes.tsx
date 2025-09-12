@@ -1,48 +1,27 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
-import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
-interface Pass {
-  id: string;
-  name: string;
-  location: string;
-  partners: string;
-  startDate: string; // ISO format
-  endDate: string; // ISO format
-  mapImage: string; // url or local
-}
-
-const passes: Pass[] = [
-  {
-    id: 'East Side Best Side',
-    name: 'East Side Best Side (Cafes)',
-    location: 'Siglap',
-    partners: 'Les Mains Bakehouse, Craftsmen Coffee, Soy...',
-    startDate: '2025-09-01',
-    endDate: '2025-10-01',
-    mapImage: 'https://via.placeholder.com/80x80.png?text=Map',
-  },
-  {
-    id: 'West Side Best Side',
-    name: 'West Side Best Side (Cafes)',
-    location: 'Siglap',
-    partners: 'Les Mains Bakehouse, Craftsmen Coffee, Soy...',
-    startDate: '2025-09-01',
-    endDate: '2025-10-06',
-    mapImage: 'https://via.placeholder.com/80x80.png?text=Map',
-  },
-];
+import { FlatList, Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pass, passes } from '../_passesData';
 
 export default function MyPassesScreen() {
   const router = useRouter();
+
+  // only active passes
+  const activePasses = passes.filter(
+    p => new Date(p.endDate).getTime() >= Date.now()
+  );
 
   const renderItem = ({ item }: { item: Pass }) => {
     const remainingDays =
       Math.ceil((new Date(item.endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
 
+    // Determine source type for image
+    const imageSource: ImageSourcePropType =
+      typeof item.mapImage === 'string' ? { uri: item.mapImage } : item.mapImage;
+
     return (
       <View style={styles.card}>
-        <Image source={{ uri: item.mapImage }} style={styles.image} />
+        <Image source={imageSource} style={styles.image} />
         <View style={{ flex: 1 }}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.location}>{item.location}</Text>
@@ -57,11 +36,11 @@ export default function MyPassesScreen() {
         <TouchableOpacity
           style={styles.redeemButton}
           onPress={() =>
-          router.push({
-            pathname: '/redeem/[id]',
-            params: { id: item.id },
-          })
-}>
+            router.push({
+              pathname: '/redeem/[id]',
+              params: { id: item.id },
+            })
+          }>
           <Text style={{ color: 'white', fontWeight: 'bold' }}>Redeem</Text>
         </TouchableOpacity>
       </View>
@@ -78,7 +57,7 @@ export default function MyPassesScreen() {
       </View>
 
       <FlatList
-        data={passes}
+        data={activePasses}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListFooterComponent={
@@ -86,8 +65,7 @@ export default function MyPassesScreen() {
             <Text>No more passes</Text>
             <TouchableOpacity
               style={styles.getMoreButton}
-              onPress={() => router.push('/(tabs)')}
-            >
+              onPress={() => router.push('/(tabs)')}>
               <Text style={{ color: '#6B4F2A', fontWeight: 'bold' }}>Get More</Text>
             </TouchableOpacity>
           </View>

@@ -1,14 +1,30 @@
-import { useRouter } from 'expo-router';
-import React from 'react';
+import { useNavigation, useRouter } from 'expo-router';
+import React, { useLayoutEffect } from 'react';
 import { FlatList, Image, ImageSourcePropType, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Partner, partners } from '../_partnersData';
+import { Pass, passes } from './_passesData';
 
-export default function PartnersScreen() {
+export default function HistoryScreen() {
   const router = useRouter();
 
-  const renderItem = ({ item }: { item: Partner }) => {
+const navigation = useNavigation();
+
+useLayoutEffect(() => {
+    navigation.setOptions({
+        title: 'History of Purchased Passes',
+    });}, [navigation]);
+
+  // expired passes only
+  const expiredPasses = passes.filter(
+    p => new Date(p.endDate).getTime() < Date.now()
+  );
+
+  const renderItem = ({ item }: { item: Pass }) => {
+    const expiredDays =
+      Math.ceil((Date.now() - new Date(item.endDate).getTime()) / (1000 * 60 * 60 * 24));
+
+    // handle local vs remote image
     const imageSource: ImageSourcePropType =
-      typeof item.image === 'string' ? { uri: item.image } : item.image;
+      typeof item.mapImage === 'string' ? { uri: item.mapImage } : item.mapImage;
 
     return (
       <View style={styles.card}>
@@ -16,14 +32,17 @@ export default function PartnersScreen() {
         <View style={{ flex: 1 }}>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.location}>{item.location}</Text>
-          <Text style={styles.rating}>Rating: {item.rating} ⭐</Text>
-          {item.description && <Text style={styles.description}>{item.description}</Text>}
+          <Text style={styles.partners}>{item.partners}</Text>
+          <Text style={styles.dates}>
+            Campaign Period: {item.startDate} - {item.endDate}
+          </Text>
+          <Text style={styles.expired}>Expired {expiredDays} days ago</Text>
         </View>
         <TouchableOpacity
           style={styles.detailsButton}
           onPress={() =>
             router.push({
-              pathname: '/partners/[id]',
+              pathname: '/redeem/[id]',
               params: { id: item.id },
             })
           }>
@@ -35,15 +54,19 @@ export default function PartnersScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Our Partners</Text>
 
       <FlatList
-        data={partners}
+        data={expiredPasses}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListFooterComponent={
           <View style={{ alignItems: 'center', marginVertical: 16 }}>
-            <Text>No more partners</Text>
+            <Text>No more expired passes</Text>
+            <TouchableOpacity
+              style={styles.getMoreButton}
+              onPress={() => router.push('/(tabs)')}>
+              <Text style={{ color: '#6B4F2A', fontWeight: 'bold' }}>Get More</Text>
+            </TouchableOpacity>
           </View>
         }
       />
@@ -65,13 +88,22 @@ const styles = StyleSheet.create({
   image: { width: 60, height: 60, borderRadius: 8, marginRight: 8 },
   name: { fontSize: 16, fontWeight: 'bold' },
   location: { fontSize: 14, color: '#666' },
-  rating: { fontSize: 12, color: '#666' },
-  description: { fontSize: 12, color: '#666', marginTop: 4 },
+  partners: { fontSize: 12, color: '#666' },
+  dates: { fontSize: 12, color: '#666' },
+  expired: { fontSize: 12, color: 'gray', fontWeight: 'bold' },
   detailsButton: {
     backgroundColor: '#6B4F2A',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
     marginLeft: 8,
+  },
+  getMoreButton: {
+    marginTop: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#6B4F2A',
   },
 });
