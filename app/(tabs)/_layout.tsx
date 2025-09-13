@@ -21,7 +21,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <FontAwesome name="home" size={28} color={color} />
           ),
         }}
@@ -30,7 +30,7 @@ export default function TabLayout() {
         name="my-passes"
         options={{
           title: 'My Passes',
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <FontAwesome name="ticket" size={28} color={color} />
           ),
         }}
@@ -39,7 +39,7 @@ export default function TabLayout() {
         name="partners"
         options={{
           title: 'Partners',
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <FontAwesome name="handshake-o" size={28} color={color} />
           ),
         }}
@@ -48,7 +48,7 @@ export default function TabLayout() {
         name="cart"
         options={{
           title: 'Cart',
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: ({ color }: { color: string }) => (
             <FontAwesome name="shopping-cart" size={28} color={color} />
           ),
         }}
